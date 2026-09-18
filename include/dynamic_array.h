@@ -53,4 +53,11 @@ int get_arr_size(const dynamic_array_t *arr, size_t *out_value);
  */
 int get_element(const dynamic_array_t *arr, size_t index, int *out_value);
 
+/**
+ * Removes and retrieves the last element in the dynamic array.
+ * @param arr Pointer to the dynamic array.
+ * @param out_value Output pointer for the popped value.
+ * @return 0 on success, 1 on invalid pointers or empty array.
+ */
+int pop_array(dynamic_array_t *arr, int *out_value);
 #endif

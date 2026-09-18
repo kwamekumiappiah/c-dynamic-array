@@ -80,6 +80,7 @@ int get_total_capacity(const dynamic_array_t *arr, size_t *capacity) {
  */
 int get_element(const dynamic_array_t *arr, size_t index, int *out_value) {
     if (!arr || !out_value) return 1;
+    // Prevent out-of-bounds access and integer overflow (avoids index + 1 wrap-around)
     if (index >= arr->size) return 1;
     *out_value = *(arr->data + index);
     return 0;
@@ -99,6 +100,26 @@ int get_arr_size(const dynamic_array_t *arr, size_t *out_value) {
 /* ---------------------------------------------------------------------
  * Mutators
  * ------------------------------------------------------------------- */
+
+int pop_array(dynamic_array_t *arr, int *out_value) {
+    if (!arr || !out_value) return 1;
+    if (arr->size == 0) return 1;
+    *out_value = arr->data[arr->size - 1];
+    arr->data[arr->size - 1] = 0;
+    arr->size--;
+    if (arr->capacity > 10 && arr->size < (arr->capacity / 4)) {
+        int *temp = calloc(sizeof(int), (arr->capacity / 2));
+        if (!temp) return 0;
+
+        memcpy(temp, arr->data, sizeof(int) * arr->size);
+        memset(arr->data, 0, sizeof(int) * arr->size);
+        free(arr->data);
+        arr->data = temp;
+        temp = NULL;
+        arr->capacity = arr->capacity / 2; 
+    }
+    return 0;
+}
 
 /*
  * Appends a new integer value to the end of the array, expanding capacity if needed.

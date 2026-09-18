@@ -10,14 +10,25 @@ int main(void) {
     push_array(my_array, 4);
     push_array(my_array, 5);
     push_array(my_array, 6);
-    size_t total_capacity;
-    int element = 0;
-    get_total_capacity(my_array, &total_capacity);
+    
+    // int element = 0;
+    // get_element(my_array, 0, &element);
+    // printf("%zu\n", element);
 
-    size_t size;
-    get_arr_size(my_array, &size);
-    printf("%zu\n", total_capacity);
-    printf("%zu\n", size);
+
+    for (int i = 0; i < 10; i++) {
+        int value = 0;
+        int error = pop_array(my_array, &value);
+        size_t capacity = 0;
+        int cap_err = get_total_capacity(my_array, &capacity);
+
+        size_t size = 0;
+        int size_err = get_arr_size(my_array, &size);
+        printf("Popped value: %d\nCurrent capacity: %zu\nCurrent size: %zu\nPop Status Code: %d\n\n", value, capacity, size, error);
+    }
+    
+    
+
     destroy_array(my_array);
 
     return 0;
