@@ -73,6 +73,10 @@ int push_array(dynamic_array_t *arr, int data) {
         return 1;
     }
 
+    if (arr->capacity > SIZE_MAX / (2 * sizeof(int))) {
+        return 1; // would overflow
+    }
+
     // 📈 Expand buffer if capacity limit is reached
     if (arr->size >= arr->capacity) {
         int *temp = realloc((void *)arr->data, sizeof(int) * (arr->capacity * 2));
