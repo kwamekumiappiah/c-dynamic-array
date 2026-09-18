@@ -9,7 +9,7 @@ typedef struct dynamic_array_t{
     int *data;
 } dynamic_array_t;
 
-
+// Create and destroy the dynamic array.
 /*
  * Allocates and initializes a new dynamic array structure and its buffer.
  */
@@ -43,7 +43,7 @@ dynamic_array_t *create_array(size_t total_capacity) {
 /*
  * Safely wipes, frees, and destroys a dynamic array instance.
  */
-int destroy_array(dynamic_array_t *arr) {
+ int destroy_array(dynamic_array_t *arr) {
     // 🛡️ Guard against NULL pointer dereference
     if (!arr) {
         return 1;
@@ -58,6 +58,38 @@ int destroy_array(dynamic_array_t *arr) {
     // 🧼 Zero-wipe and free the metadata struct container
     memset((void *)arr, 0, sizeof(dynamic_array_t));
     free(arr);
+
+    return 0; // Success status
+}
+
+
+// Push and pull elements from the array.
+/*
+ * Appends a new integer value to the end of the array, expanding capacity if needed.
+ */
+int push_array(dynamic_array_t *arr, int data) {
+    // 🛡️ Guard against NULL pointer dereference
+    if (!arr) {
+        return 1;
+    }
+
+    // 📈 Expand buffer if capacity limit is reached
+    if (arr->size >= arr->capacity) {
+        int *temp = realloc((void *)arr->data, sizeof(int) * (arr->capacity * 2));
+        if (!temp) {
+            return 1; // Return failure status without leaking or corrupting original data
+        }
+
+        arr->data = temp;
+        arr->capacity *= 2;
+
+        // 🧼 Zero-fill newly allocated uninitialized memory block
+        memset((void *)(arr->data + arr->size), 0, sizeof(int) * arr->size);
+    }
+
+    // 📥 Append value and update element count
+    arr->data[arr->size] = data;
+    arr->size++;
 
     return 0; // Success status
 }

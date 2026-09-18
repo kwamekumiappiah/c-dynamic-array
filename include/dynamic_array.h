@@ -5,6 +5,8 @@
 
 typedef struct dynamic_array_t dynamic_array_t;
 
+
+// Create and destroy the dynamic array.
 /**
  * Allocates and initializes a new dynamic array.
  * @param total_capacity Initial capacity for elements.
@@ -19,6 +21,8 @@ dynamic_array_t *create_array(size_t total_capacity);
  */
 int destroy_array(dynamic_array_t *arr);
 
+
+// Push and pull elements from the array.
 /**
  * Appends a new integer value to the end of the array.
  * @param arr Pointer to the dynamic array.
