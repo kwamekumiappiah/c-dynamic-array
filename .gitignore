@@ -1,0 +1,13 @@
+# Build output directory
+build/
+
+# Compiled Executables & Objects
+*.exe
+*.out
+*.o
+*.obj
+
+# Static & Dynamic Libraries
+*.a
+*.so
+*.dll
