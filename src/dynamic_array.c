@@ -28,8 +28,6 @@ dynamic_array_t *create_array(size_t total_capacity) {
     // 🔢 Allocate and zero-initialize the internal integer buffer
     arr->data = calloc(total_capacity, sizeof(int));
     if (!arr->data) {
-        // 🧹 Clean up the allocated struct metadata if buffer allocation fails
-        memset((void *)arr, 0, sizeof(dynamic_array_t));
         free(arr);
         return NULL;
     }
@@ -63,7 +61,45 @@ dynamic_array_t *create_array(size_t total_capacity) {
 }
 
 
-// Push and pull elements from the array.
+/* ---------------------------------------------------------------------
+ * Getters
+ * ------------------------------------------------------------------- */
+
+/*
+ * Safely retrieves the total allocated capacity of the array.
+ */
+int get_total_capacity(const dynamic_array_t *arr, size_t *capacity) {
+    if (!arr || !capacity) return 1;
+    *capacity = arr->capacity;
+    return 0;
+}
+
+
+/*
+ * Safely retrieves an element at a specific zero-based index.
+ */
+int get_element(const dynamic_array_t *arr, size_t index, int *out_value) {
+    if (!arr || !out_value) return 1;
+    if (index >= arr->size) return 1;
+    *out_value = *(arr->data + index);
+    return 0;
+}
+
+
+/*
+ * Safely retrieves the current number of elements stored in the array.
+ */
+int get_arr_size(const dynamic_array_t *arr, size_t *out_value) {
+    if (!arr || !out_value) return 1;
+    *out_value = arr->size;
+    return 0;
+}
+
+
+/* ---------------------------------------------------------------------
+ * Mutators
+ * ------------------------------------------------------------------- */
+
 /*
  * Appends a new integer value to the end of the array, expanding capacity if needed.
  */
@@ -73,12 +109,12 @@ int push_array(dynamic_array_t *arr, int data) {
         return 1;
     }
 
-    if (arr->capacity > SIZE_MAX / (2 * sizeof(int))) {
-        return 1; // would overflow
-    }
-
     // 📈 Expand buffer if capacity limit is reached
     if (arr->size >= arr->capacity) {
+        if (arr->capacity > SIZE_MAX / (2 * sizeof(int))) {
+            return 1; // would overflow
+        }
+
         int *temp = realloc((void *)arr->data, sizeof(int) * (arr->capacity * 2));
         if (!temp) {
             return 1; // Return failure status without leaking or corrupting original data
