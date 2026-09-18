@@ -101,12 +101,21 @@ int get_arr_size(const dynamic_array_t *arr, size_t *out_value) {
  * Mutators
  * ------------------------------------------------------------------- */
 
+/**
+ * @brief Removes and retrieves the last element from the array.
+ *
+ * @param[in,out] arr       Pointer to the dynamic array structure.
+ * @param[out]    out_value Pointer where the popped integer will be stored.
+ *
+ * @return int 0 on success; 1 if arr/out_value is NULL or if the array is empty.
+ */
 int pop_array(dynamic_array_t *arr, int *out_value) {
     if (!arr || !out_value) return 1;
     if (arr->size == 0) return 1;
     *out_value = arr->data[arr->size - 1];
     arr->data[arr->size - 1] = 0;
     arr->size--;
+    // We make sure to zero out the memory before freeing it and moving to another memory space
     if (arr->capacity > 10 && arr->size < (arr->capacity / 4)) {
         int *temp = calloc(sizeof(int), (arr->capacity / 2));
         if (!temp) return 0;
