@@ -60,4 +60,8 @@ int get_element(const dynamic_array_t *arr, size_t index, int *out_value);
  * @return 0 on success, 1 on invalid pointers or empty array.
  */
 int pop_array(dynamic_array_t *arr, int *out_value);
+
+
+
+int contains(dynamic_array_t *arr, int data);
 #endif

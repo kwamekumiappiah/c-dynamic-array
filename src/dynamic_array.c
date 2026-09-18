@@ -134,6 +134,7 @@ int pop_array(dynamic_array_t *arr, int *out_value) {
  * Appends a new integer value to the end of the array, expanding capacity if needed.
  */
 int push_array(dynamic_array_t *arr, int data) {
+
     // 🛡️ Guard against NULL pointer dereference
     if (!arr) {
         return 1;
@@ -163,3 +164,16 @@ int push_array(dynamic_array_t *arr, int data) {
 
     return 0; // Success status
 }
+
+
+/*
+ * Check if the array contains an element and send an apropriate response.
+ */
+int contains(dynamic_array_t *arr, int data) {
+    if (!arr || !arr->data) return 0;
+    for (size_t i = 0; i < arr->size; i++) {
+        if ((arr->data[i]) == data) return 1;
+    }
+    return 0;
+}
+
