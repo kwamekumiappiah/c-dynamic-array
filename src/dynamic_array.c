@@ -9,7 +9,39 @@ typedef struct dynamic_array_t{
     int *data;
 } dynamic_array_t;
 
-// Create and destroy the dynamic array.
+
+
+/* ---------------------------------------------------------------------
+ * Helper functions
+ * ---------------------------------------------------------------------
+ */
+/*
+ * Safely move the array to another memory space and clear the old buffer before freeing it.
+ */
+const int realloc_array(dynamic_array_t *arr) {
+    if (arr->capacity > SIZE_MAX / (2 * sizeof(int))) {
+            return 1; // would overflow
+        }
+
+    int *temp = realloc((void *)arr->data, sizeof(int) * (arr->capacity * 2));
+    if (!temp) {
+        return 1; // Return failure status without leaking or corrupting original data
+    }
+
+    arr->data = temp;
+    arr->capacity *= 2;
+
+        // 🧼 Zero-fill newly allocated uninitialized memory block
+    memset((void *)(arr->data + arr->size), 0, sizeof(int) * arr->size);
+    return 0;
+}
+
+
+
+/* ---------------------------------------------------------------------
+ * Create and Destroy
+ * ---------------------------------------------------------------------
+ */
 /*
  * Allocates and initializes a new dynamic array structure and its buffer.
  */
@@ -144,20 +176,7 @@ int push_array(dynamic_array_t *arr, int data) {
 
     // 📈 Expand buffer if capacity limit is reached
     if (arr->size >= arr->capacity) {
-        if (arr->capacity > SIZE_MAX / (2 * sizeof(int))) {
-            return 1; // would overflow
-        }
-
-        int *temp = realloc((void *)arr->data, sizeof(int) * (arr->capacity * 2));
-        if (!temp) {
-            return 1; // Return failure status without leaking or corrupting original data
-        }
-
-        arr->data = temp;
-        arr->capacity *= 2;
-
-        // 🧼 Zero-fill newly allocated uninitialized memory block
-        memset((void *)(arr->data + arr->size), 0, sizeof(int) * arr->size);
+        if (realloc_array(arr) == 1) return 1;
     }
 
     // 📥 Append value and update element count
@@ -175,6 +194,12 @@ int set_at(dynamic_array_t *arr, size_t index, int value) {
     if (index + 1 > arr->size) return 1;
     arr->data[index] = value;
     return 0;
+}
+
+int insert_at(dynamic_array_t *arr, size_t index, int value) {
+    if (!arr) return 1;
+    if ((index + 1) > arr->size) return 1;
+
 }
 
 /* ---------------------------------------------------------------------
