@@ -20,19 +20,25 @@ typedef struct dynamic_array_t{
  */
 const int realloc_array(dynamic_array_t *arr) {
     if (arr->capacity > SIZE_MAX / (2 * sizeof(int))) {
-            return 1; // would overflow
-        }
-
-    int *temp = realloc((void *)arr->data, sizeof(int) * (arr->capacity * 2));
-    if (!temp) {
-        return 1; // Return failure status without leaking or corrupting original data
+        return 1; // Overflow protection
     }
 
+    // 1. Reallocate memory into a temporary pointer
+    int *temp = realloc((void *)arr->data, sizeof(int) * (arr->capacity * 2));
+    if (!temp) {
+        return 1; // Allocation failed; original data is untouched
+    }
+
+    // 2. Save old capacity to track the start of the new memory block
+    size_t old_capacity = arr->capacity;
+
+    // 3. Zero-fill ONLY the new block using `temp` (never old arr->data)
+    memset((void *)(temp + old_capacity), 0, sizeof(int) * old_capacity);
+
+    // 4. Update array structure safely
     arr->data = temp;
     arr->capacity *= 2;
 
-        // 🧼 Zero-fill newly allocated uninitialized memory block
-    memset((void *)(arr->data + arr->size), 0, sizeof(int) * arr->size);
     return 0;
 }
 
@@ -196,10 +202,22 @@ int set_at(dynamic_array_t *arr, size_t index, int value) {
     return 0;
 }
 
+
+/*
+ * Shift the array by 1 and insert at a specified index
+ */
 int insert_at(dynamic_array_t *arr, size_t index, int value) {
     if (!arr) return 1;
+    if ((index) == arr->size) return push_array(arr, value); // Add push element if attempting to insert at the end of the array
     if ((index + 1) > arr->size) return 1;
-
+    if (arr->size >= arr->capacity) {
+        if (realloc_array(arr) == 1) return 1;
+    }
+    // Shift the array by one to make space for the new value
+    memmove(arr->data + index + 1, arr->data + index, sizeof(int) * (arr->size - (index)));
+    arr->data[index] = value;
+    arr->size++;
+    return 0;
 }
 
 /* ---------------------------------------------------------------------

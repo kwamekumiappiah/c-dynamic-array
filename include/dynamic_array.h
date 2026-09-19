@@ -77,4 +77,13 @@ int contains(dynamic_array_t *arr, int data);
  * @return 0 on success, 1 on invalid pointer or out-of-bounds index.
  */
 int set_at(dynamic_array_t *arr, size_t index, int value);
+
+/**
+ * Inserts an integer value at a specific index, shifting existing elements to the right.
+ * @param arr Pointer to the dynamic array.
+ * @param index The zero-based position where the value should be inserted (0 to arr->size).
+ * @param value The integer value to store.
+ * @return 0 on success, 1 on invalid pointer, out-of-bounds index, or allocation failure.
+ */
+int insert_at(dynamic_array_t *arr, size_t index, int value);
 #endif
