@@ -42,6 +42,21 @@ const int realloc_array(dynamic_array_t *arr) {
     return 0;
 }
 
+/*
+ * Downsize the array
+ */
+const int downsize_array(dynamic_array_t *arr) {
+    int *temp = calloc(sizeof(int), (arr->capacity / 2));
+        if (!temp) return 1;  
+
+        memcpy(temp, arr->data, sizeof(int) * arr->size);
+        memset(arr->data, 0, sizeof(int) * arr->capacity);
+        free(arr->data);
+        arr->data = temp;
+        temp = NULL;
+        arr->capacity = arr->capacity / 2;
+    return 0;
+}
 
 
 /* ---------------------------------------------------------------------
@@ -157,15 +172,7 @@ int pop_array(dynamic_array_t *arr, int *out_value) {
     arr->size--;
     // We make sure to zero out the memory before freeing it and moving to another memory space
     if (arr->capacity > 10 && arr->size < (arr->capacity / 4)) {
-        int *temp = calloc(sizeof(int), (arr->capacity / 2));
-        if (!temp) return 0;
-
-        memcpy(temp, arr->data, sizeof(int) * arr->size);
-        memset(arr->data, 0, sizeof(int) * arr->size);
-        free(arr->data);
-        arr->data = temp;
-        temp = NULL;
-        arr->capacity = arr->capacity / 2; 
+        downsize_array(arr);
     }
     return 0;
 }
@@ -220,11 +227,43 @@ int insert_at(dynamic_array_t *arr, size_t index, int value) {
     return 0;
 }
 
+
+/*
+ * Delete an element by shifting the array and zeroing out the 
+ */
+int remove_at(dynamic_array_t *arr, size_t index, int *out_value) {
+    // 1. Safety guard: null pointers or index out of bounds
+    if (!arr || !out_value || index >= arr->size) {
+        return 1;
+    }
+
+    // 2. Retrieve the value before overwriting
+    *out_value = arr->data[index];
+
+    // 3. Shift remaining elements left by 1 position
+    // Number of elements to shift: (arr->size - 1 - index)
+    memmove(arr->data + index, 
+            arr->data + index + 1, 
+            sizeof(int) * (arr->size - 1 - index));
+    
+    // 4. 🧼 Proactively sanitize the vacated trailing memory slot
+    arr->data[arr->size - 1] = 0;
+
+    // 5. Decrement array element count
+    arr->size--;
+
+    if (arr->capacity > 10 && arr->size < (arr->capacity / 4)) {
+        downsize_array(arr);
+    }
+
+    return 0;
+}
+
+
 /* ---------------------------------------------------------------------
  * MISC
  * ---------------------------------------------------------------------
  */
-
 /*
  * Check if the array contains an element and send an apropriate response.
  */

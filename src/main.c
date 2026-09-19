@@ -17,7 +17,7 @@ int main(void) {
         int result = 0;
         size_t length = 0;
         insert_at(my_array, (size_t)i, i);
-        get_element(my_array, i, &result);
+        get_element(my_array, i, &result); 
         get_total_capacity(my_array, &length);
         printf("Data: %d\nLength: %zu\n\n", result, length);
     }

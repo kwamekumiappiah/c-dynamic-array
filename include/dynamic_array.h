@@ -86,4 +86,14 @@ int set_at(dynamic_array_t *arr, size_t index, int value);
  * @return 0 on success, 1 on invalid pointer, out-of-bounds index, or allocation failure.
  */
 int insert_at(dynamic_array_t *arr, size_t index, int value);
+
+/**
+ * Removes and retrieves the element at a specific index from the dynamic array.
+ * @param arr Pointer to the dynamic array.
+ * @param index The zero-based position of the element to remove.
+ * @param out_value Output pointer where the removed value will be stored.
+ * @return 0 on success, 1 on invalid pointers or out-of-bounds index.
+ */
+int remove_at(dynamic_array_t *arr, size_t index, int *out_value);
+
 #endif
