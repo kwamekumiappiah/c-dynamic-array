@@ -63,7 +63,8 @@ dynamic_array_t *create_array(size_t total_capacity) {
 
 /* ---------------------------------------------------------------------
  * Getters
- * ------------------------------------------------------------------- */
+ * ---------------------------------------------------------------------
+ */
 
 /*
  * Safely retrieves the total allocated capacity of the array.
@@ -99,7 +100,8 @@ int get_arr_size(const dynamic_array_t *arr, size_t *out_value) {
 
 /* ---------------------------------------------------------------------
  * Mutators
- * ------------------------------------------------------------------- */
+ * ---------------------------------------------------------------------
+ */
 
 /**
  * @brief Removes and retrieves the last element from the array.
@@ -165,6 +167,20 @@ int push_array(dynamic_array_t *arr, int data) {
     return 0; // Success status
 }
 
+/*
+ * Set an element at an index to a given value.
+ */
+int set_at(dynamic_array_t *arr, size_t index, int value) {
+    if (!arr) return 1;
+    if (index + 1 > arr->size) return 1;
+    arr->data[index] = value;
+    return 0;
+}
+
+/* ---------------------------------------------------------------------
+ * MISC
+ * ---------------------------------------------------------------------
+ */
 
 /*
  * Check if the array contains an element and send an apropriate response.

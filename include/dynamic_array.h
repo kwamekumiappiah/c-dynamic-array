@@ -61,7 +61,20 @@ int get_element(const dynamic_array_t *arr, size_t index, int *out_value);
  */
 int pop_array(dynamic_array_t *arr, int *out_value);
 
-
-
+/**
+ * Checks if a specific value exists within the dynamic array.
+ * @param arr Pointer to the dynamic array.
+ * @param data The integer value to search for.
+ * @return 1 if found, 0 if not found or if arr is NULL.
+ */
 int contains(dynamic_array_t *arr, int data);
+
+/**
+ * Updates the value at a specific index in the dynamic array.
+ * @param arr Pointer to the dynamic array.
+ * @param index The zero-based position to update.
+ * @param value The new integer value to store.
+ * @return 0 on success, 1 on invalid pointer or out-of-bounds index.
+ */
+int set_at(dynamic_array_t *arr, size_t index, int value);
 #endif

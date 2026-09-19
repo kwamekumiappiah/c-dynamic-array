@@ -14,8 +14,14 @@ int main(void) {
     printf("%d\n", contains(my_array, -1));   
     
     if (contains(my_array, 42)) {
-    printf("Found 42!\n");
-}
+        printf("Found 42!\n");
+    }
+
+    set_at(my_array, 3, 100);
+
+    int result = 0;
+    get_element(my_array, 3, &result);
+    printf("%d", result);
 
     destroy_array(my_array);
 
