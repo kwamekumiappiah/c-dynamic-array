@@ -204,7 +204,7 @@ int push_array(dynamic_array_t *arr, int data) {
  */
 int set_at(dynamic_array_t *arr, size_t index, int value) {
     if (!arr) return 1;
-    if (index + 1 > arr->size) return 1;
+    if (index >= arr->size) return 1;
     arr->data[index] = value;
     return 0;
 }
@@ -216,7 +216,7 @@ int set_at(dynamic_array_t *arr, size_t index, int value) {
 int insert_at(dynamic_array_t *arr, size_t index, int value) {
     if (!arr) return 1;
     if ((index) == arr->size) return push_array(arr, value); // Add push element if attempting to insert at the end of the array
-    if ((index + 1) > arr->size) return 1;
+    if (index > arr->size) return 1; 
     if (arr->size >= arr->capacity) {
         if (realloc_array(arr) == 1) return 1;
     }
